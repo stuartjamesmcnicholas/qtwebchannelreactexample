@@ -2,35 +2,29 @@ import sys
 try:
    from PySide6.QtWidgets import QApplication, QMainWindow
    from PySide6.QtWebEngineWidgets import QWebEngineView
-   from PySide6.QtCore import QUrl
-   from PySide6 import QtCore, QtWebChannel
+   from PySide6.QtCore import QUrl, Slot, Signal, QObject
+   from PySide6.QtWebChannel import QWebChannel
 except:
    from PySide2.QtWidgets import QApplication, QMainWindow
    from PySide2.QtWebEngineWidgets import QWebEngineView
-   from PySide2.QtCore import QUrl
-   from PySide2 import QtCore, QtWebChannel
+   from PySide2.QtCore import QUrl, Slot, Signal, QObject
+   from PySide2.QtWebChannel import QWebChannel
 
-class WebToolBarButtonBridge(QtCore.QObject):
-    buttonClicked = QtCore.Signal(str)
-    buttonList = QtCore.Signal(list)
-    @QtCore.Slot(str)
+class WebToolBarButtonBridge(QObject):
+    buttonClicked = Signal(str)
+    buttonList = Signal(list)
+    @Slot(str)
     def clicked(self,buttonName):
         self.buttonClicked.emit(buttonName)
-    @QtCore.Slot('QJsonArray')
-    def namesRequest(self,buttonNames):
-        ls = []
-        for i in range(buttonNames.count()):
-            ls.append(buttonNames.at(i).toString())
-        self.buttonList.emit(ls)
 
 class WebEngineView(QWebEngineView):
-    buttonClicked = QtCore.Signal(str)
-    buttonList = QtCore.Signal(list)
+    buttonClicked = Signal(str)
+    buttonList = Signal(list)
     
     def __init__(self,parent=None):
         QWebEngineView.__init__(self,parent)
         
-        self.channel = QtWebChannel.QWebChannel()
+        self.channel = QWebChannel()
         self.handler = WebToolBarButtonBridge()
         self.channel.registerObject('handler', self.handler)
         self.page().setWebChannel(self.channel)
@@ -52,7 +46,7 @@ else:
 window.setCentralWidget(webview)
 window.show()
 
-@QtCore.Slot(str)
+@Slot(str)
 def handleClick(s):
        print("clicked!")
        print(s,"was clicked")

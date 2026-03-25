@@ -13,8 +13,8 @@ function App() {
 
   // @ts-expect-error dummyIgnored is not used
   const dummyClicked = (dummyIgnored:string) => {return new Promise<void>(() =>{})}
-
   const [bridge,setBridge] = useState<handler>({id:"null","__QObject*__":false, clicked:dummyClicked});
+
   useEffect(() => {
       // @ts-expect-error window.qt
       new QWebChannel(window.qt.webChannelTransport, function (channel) {
