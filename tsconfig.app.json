@@ -8,13 +8,16 @@
     "types": ["vite/client"],
     "skipLibCheck": true,
 
+    /* Composite, keeps build happy */
+    "composite" : true,
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "noEmit": true,
     "jsx": "react-jsx",
+    "emitDeclarationOnly": true,
 
     /* Linting */
     "strict": true,
